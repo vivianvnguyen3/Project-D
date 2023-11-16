@@ -1,0 +1,36 @@
+from Bio.PDB import DSSP
+from Bio.PDB.PDBParser import PDBParser
+
+#Replace "Insert_PDB_file" with the desired PDB model file
+PDB_file = "Insert_PDB_file"
+#Replace "Insert_DSSP_file" with the DSSP file that is the same model as the inserted PDB file
+DSSP_file = "Insert_DSSP_file"
+
+#Initialize the PDB parser
+parser = PDBParser()
+
+#Parse structure from the PDB file
+structure = parser.get_structure('PDB_STRUCTURE', PDB_file)
+
+#Pick the first model in the PDB file (index 0)
+model = structure[0]
+
+#Run DSSP analysis
+DSSP = DSSP(model, DSSP_file)
+
+#Create a list of tuples containing residue number and structure letter
+residue_structure_pairs = [(key[1][1], DSSP[key][2]) for key in DSSP.keys()]
+
+#Indicate the output file to be written to
+output_file = "Output_file.txt"
+
+#Write the structure letters to a text file (can also write the residue number if desired)
+with open(output_file, 'w') as f:
+    for pair in residue_structure_pairs:
+        #Formats each line as a number
+        #line = f"{pair[0]} {pair[1]}\n"
+        #Formats each line as a letter
+        line = f"{pair[1]}\n"
+        f.write(line)
+
+print(f'Structure letters were written to {output_file}')
